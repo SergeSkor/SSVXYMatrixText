@@ -144,30 +144,30 @@ int16_t XYMatrixText::OffsetY_Center() //center offsetY when ...
 uint8_t XYMatrixText::getLetterRow(uint16_t UTF8, uint8_t row) //font row 0..4
 {
   //check out-of-limits conditions for both parameters!
-  uint8_t index; uint8_t X;
+  uint8_t index; 
   switch(UTF8)
    {
+    case 0 ... 31: //control bytes, replaced with <space>
+	  index = 0;    
+	  break; 
+
     case 32 ... 127: //english letters ans signes ' '...'⌂', index 0...95
 	  index = UTF8-32;    
-	  X=1;
 	  break; 
 	  
 	case 0xD090 ... 0xD0BF: //russian letetrs А...п, index 96(0x60)..143(0x8F)
 	  index = UTF8-0xD030; 
-	  X=2;
 	  break;
 	  
     case 0xD180 ... 0xD18F: //russian letetrs р...я, index 144(0x90)..159(9F)
 	  index = UTF8-0xD0F0; 
-	  X=3;
 	  break;
 	  
 	default: 
-	  return 0x55; 
-	  X=4;
-      Serial.printf(" %c - ASCII: %d (%xHex), Index: %d, Branch: %d\n", UTF8, UTF8, UTF8, index, X);
+      //Serial.printf(" UTF8: %d (%xHex)\n", UTF8, UTF8);   
+	  return 0x55;  //to indicate error
 	  break; 
-   }  
+   }
 return pgm_read_byte(&(fontHEX[index] [row])); 	
 }
 
