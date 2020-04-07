@@ -29,7 +29,7 @@ CRGB leds[NUM_LEDS];
 XYMatrix matrix(leds, MatrixWidth, MatrixHeight, true);
 XYMatrixText matrixText(&matrix);
 
-String Str = String("Hello World! Привет всем...");  //english -russian
+String Str = String("Hello World! Привет всем..."); //english -russian
 
 
 
@@ -61,11 +61,33 @@ while ( UTF8Itterator(&Str, index, UTF8) )
 FastLED.clear();
 FastLED.show();
 delay(5000);
-WaitForSerial("end of loop() ");
+
+NewSerialStringProcess();
+
 }
 
 
-void WaitForSerial(const char *serial_message)
+String Stmp = "";         // a String to hold incoming data
+
+void NewSerialStringProcess()
 {
-//
+  while (Serial.available()) 
+  {
+    // get the new byte:
+    char inChar = (char)Serial.read();
+    // add it to the Stmp:
+    if ((inChar != '\r') && (inChar != '\n') ) 
+      Stmp += inChar;
+      else
+      {
+        // if the incoming character is a newline, set a flag so the main loop can
+        // do something about it:
+        if (Stmp.length() > 0) 
+          {
+          Serial.printf("\r    --> Str \"%s\" replaced with \"%s\"\n", Str.c_str(), Stmp.c_str() );
+          Str = String(Stmp);
+          Stmp = String("");
+          }  
+      }
+  }
 }

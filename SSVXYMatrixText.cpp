@@ -141,7 +141,7 @@ int16_t XYMatrixText::OffsetY_Center() //center offsetY when ...
 }
 
 //RUSSIAN UTF8
-uint8_t XYMatrixText::getLetterRow(uint16_t UTF8, uint8_t row) //font row 0..4
+uint8_t XYMatrixText::getLetterColumn(uint16_t UTF8, uint8_t column) //font column 0..4
 {
   //check out-of-limits conditions for both parameters!
   uint8_t index; 
@@ -168,7 +168,7 @@ uint8_t XYMatrixText::getLetterRow(uint16_t UTF8, uint8_t row) //font row 0..4
 	  return 0x55;  //to indicate error
 	  break; 
    }
-return pgm_read_byte(&(fontHEX[index] [row])); 	
+return pgm_read_byte(&(fontHEX[index] [column])); 	
 }
 
 void XYMatrixText::drawLetter(uint16_t UTF8, int16_t offsetX, int16_t offsetY, CRGB letterColor)
@@ -188,8 +188,8 @@ void XYMatrixText::drawLetter(uint16_t UTF8, int16_t offsetX, int16_t offsetY, C
   for (byte x=start_pos; x<finish_pos; x++) 
   {
     int thisByte;
-    if (_left_right_swap) thisByte = getLetterRow(UTF8, _font_char_width-1-x);
-                     else thisByte = getLetterRow(UTF8, x);
+    if (_left_right_swap) thisByte = getLetterColumn(UTF8, _font_char_width-1-x);
+                     else thisByte = getLetterColumn(UTF8, x);
 
     for (byte y=0; y<_font_char_height; y++) 
 	{
