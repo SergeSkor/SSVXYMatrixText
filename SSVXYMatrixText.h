@@ -22,10 +22,16 @@ class XYMatrixText
 	                           //If it is not needed - drawString() with String parameter may be used.
 	uint16_t getStringWidthPx();
 	uint16_t getStringHeightPx();
-	uint8_t getLetterColumn(uint16_t UTF8, uint8_t column); //font row 0..4
+	uint8_t getFontIndex(uint16_t UTF8); //returns index in font
+	uint8_t getLetterColumn(uint16_t UTF8, uint8_t column); //font colunmn 0..4, from left to right
+	
+	//not used
+	//uint8_t getLetterRow(uint16_t UTF8, uint8_t row); //font row 0..7, from bottom to top
+	
 	void drawLetter(uint16_t UTF8, int16_t offsetX, int16_t offsetY, CRGB letterColor);
 	void drawString(int16_t offsetX, int16_t offsetY, CRGB letterColor); //String must be specify in advance by using .setString();
 	void drawString(String* S, int16_t offsetX, int16_t offsetY, CRGB letterColor); //drawString() with String parameter
+	
 	//positioning, offsets
 	boolean IsStringWidthFit();
 	boolean IsStringHeightFit();
@@ -51,6 +57,11 @@ class XYMatrixText
     boolean _top_bottom_swap;
 	uint8_t _font_char_width;  //5   //char width, depends on font
     uint8_t _font_char_height; //8   //char height, depends on font
+	//background
+	boolean _UpdateBackground;
+	CRGB _BackgroundColor;
+	//functions
+	void drawString_LeftToRight(int16_t offsetX, int16_t offsetY, CRGB letterColor);
 
 }; //End of XYMatrixText Class
 
