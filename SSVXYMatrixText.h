@@ -11,6 +11,26 @@
 
 boolean UTF8Itterator(String* S, uint8_t &index, uint16_t &UTF8);
 
+typedef enum {
+    Flip_None = 0,
+    Flip_Hor  = 1,
+    Flip_Vert = 2,
+} TCharFlip;
+
+typedef enum {
+    Rotate_None  = 0,
+    Rotate_CW90  = 1,
+    Rotate_CCW90 = 2,
+	Rotate_180   = 3,
+} TCharRotation;
+
+typedef enum {
+    Dir_LeftToRight  = 0,
+    Dir_RightToLeft  = 1,
+    Dir_TopToBottom  = 2,
+    Dir_BottomToTop  = 3,
+} TStringDirection;
+
 //XYMatrixText Class
 class XYMatrixText
 {
@@ -28,7 +48,8 @@ class XYMatrixText
 	//not used
 	//uint8_t getLetterRow(uint16_t UTF8, uint8_t row); //font row 0..7, from bottom to top
 	
-	void drawLetter(uint16_t UTF8, int16_t offsetX, int16_t offsetY, CRGB letterColor);
+        //make similar function, but to blend color of font top color of background.
+	void drawChar(uint16_t UTF8, int16_t offsetX, int16_t offsetY, CRGB letterColor);
 	void drawString(int16_t offsetX, int16_t offsetY, CRGB letterColor); //String must be specify in advance by using .setString();
 	void drawString(String* S, int16_t offsetX, int16_t offsetY, CRGB letterColor); //drawString() with String parameter
 	
@@ -49,20 +70,43 @@ class XYMatrixText
 	int16_t OffsetX_Center(); //center offsetX when ...
 	int16_t OffsetY_Center(); //center offsetY when ...
 	
+	//char flips
+	TCharFlip getCharFlip();
+	void setCharFlip(TCharFlip CharFlip);
+	//char rotation
+	TCharRotation getCharRotation();
+	void setCharRotation(TCharRotation CharRotation);
+	//Sting Direction
+	TStringDirection getStringDir();
+    void setStringDir(TStringDirection StringDir);
+    //background color
+	boolean getUpdateBackground();
+	void setUpdateBackground(boolean UpdateBackground);
+	CRGB getBackgroundColor();
+	void setBackgroundColor(CRGB Color);
+	//char space
+	uint8_t getCharSpace();
+	void setCharSpace(uint8_t charSpace);
+	
   protected:
     XYMatrix*  _matrixCanvas;
     String* _s;
     uint8_t    _charSpace;
-    boolean _left_right_swap; 
-    boolean _top_bottom_swap;
+    //boolean _left_right_swap; 
+    //boolean _top_bottom_swap;
+	TCharFlip _charFlip;
+	TCharRotation _charRotation;
+	TStringDirection _stringDir;
+	
 	uint8_t _font_char_width;  //5   //char width, depends on font
     uint8_t _font_char_height; //8   //char height, depends on font
-	//background
+	//background color
 	boolean _UpdateBackground;
 	CRGB _BackgroundColor;
 	//functions
-	void drawString_LeftToRight(int16_t offsetX, int16_t offsetY, CRGB letterColor);
-
+	void drawChar_Vert(uint16_t UTF8, int16_t offsetX, int16_t offsetY, CRGB letterColor, boolean swapLeftRight, boolean swapTopBottom);
+    void drawChar_Hor (uint16_t UTF8, int16_t offsetX, int16_t offsetY, CRGB letterColor, boolean swapLeftRight, boolean swapTopBottom);
+	
 }; //End of XYMatrixText Class
 
 #endif
